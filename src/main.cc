@@ -1,11 +1,21 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <iostream>
 
-#include "fwd.hh"
+#include "adapter.hh"
 
+struct VertexProperties
+{
+  int coord;
+  int value;
+};
+
+typedef boost::property<boost::edge_weight_t, int> EdgeWeightProperty;
+typedef boost::adjacency_list<boost::listS, boost::vecS, boost::directedS, VertexProperties, EdgeWeightProperty > DirectedGraph;
+typedef boost::graph_traits<DirectedGraph>::edge_iterator edge_iterator;
+ 
 int main()
 {
-    Graph_list g;
+    DirectedGraph g;
  
     boost::add_edge (0, 1, 8, g);
     boost::add_edge (0, 3, 18, g);
@@ -16,7 +26,13 @@ int main()
     boost::add_edge (1, 4, 1, g);
     boost::add_edge (4, 5, 6, g);
     boost::add_edge (2, 5, 7, g);
- 
+
+    for (unsigned i = 0; i < boost::num_vertices(g); i++)
+    {
+      g[i].coord = 10 + i; 
+      g[i].value = i * i;
+    } 
+
     std::pair<edge_iterator, edge_iterator> ei = edges(g);
  
     std::cout << "Number of edges = " << num_edges(g) << "\n";
@@ -27,6 +43,15 @@ int main()
                     std::cout, "\n"});
  
     std::cout << std::endl;
- 
+    
+    Adapter<int, int, DirectedGraph> a(g);
+
+    std::cout << std::endl;
+
+    auto map = a.pixels();
+
+    for (auto [k, v]: map)
+      std::cout << " -> " << k << "   " << v << std::endl;
+
     return 0;
  }

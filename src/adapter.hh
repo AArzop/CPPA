@@ -1,62 +1,33 @@
 #pragma once
 
-#include <boost/graph/adjacency_list.hpp>
+#include <boost/property_map/property_map.hpp>
+#include <map>
 
-#include "fwd.hh"
-
-using coord = int;
-
-template<class T>
+template<typename coordType, typename valueType, typename Graph>
 class Adapter
 {
 public:
-  using point_type = coord;
-  using value_type = T;
-  using pixel_type = std::pair<coord, T>;
-  using reference = T&;
-  using const_reference = const T&;
+  using point_type = coordType;
+  using value_type = valueType;
+  using pixel_type = std::pair<coordType, valueType>;
+  using reference = valueType&;
+  using const_reference = const valueType&;
+  
+  Adapter(Graph g);
+  
+  const_reference operator() (point_type p) const;
+  reference operator() (point_type p);
 
-  Adapter(Graph_list g);
-  Adapter(int i);
+  auto domain() const;
 
-  const_reference operator() (point_type p) const
-  {
-    return buffer_[0];
-  }
+  auto values() const;
+  auto values();
 
-  reference operator() (point_type p) 
-  {
-    return buffer_[0];
-  }
-
-  auto domain() const 
-  {
-
-  }
-
-  auto values() const 
-  {
-
-  }
-
-  auto values() 
-  {
-
-  }
-
-  auto pixels() const 
-  {
-
-  }
-
-  auto pixels() 
-  {
-
-  }
+  auto pixels() const;
+  auto pixels();
 
 private:
-  std::unique_ptr<T[]> buffer_;
-
+  std::map<coordType, valueType> pixelMap;
 };
 
 #include "adapter.hxx"
