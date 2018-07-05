@@ -29,7 +29,7 @@ int main()
 
     for (unsigned i = 0; i < boost::num_vertices(g); i++)
     {
-      g[i].coord = 10 + i; 
+      g[i].coord = i; 
       g[i].value = i * i;
     } 
 
