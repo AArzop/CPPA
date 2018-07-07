@@ -80,8 +80,10 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge4()
       auto coord_i = idCoordMap[i];
       auto coord_j = idCoordMap[j];
       if (coord_i.first == coord_j.first)
+      {
         if (coord_i.second + 1 == coord_j.second || coord_i.second == coord_j.second + 1)
           boost::add_edge(i, j, *graph);
+      }
       else if (coord_i.second == coord_j.second)
         if (coord_i.first + 1 == coord_j.first || coord_i.first == coord_j.first + 1)
           boost::add_edge(i, j, *graph);
@@ -115,9 +117,9 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge6()
        auto c2 = idCoordMap[j];
       for (auto [a, b, c]: vect)
       {
-        if (std::get<0>(*c1) + a == std::get<0>(*c2) && 
-            std::get<1>(*c1) + b == std::get<1>(*c2) && 
-            std::get<2>(*c1) + c == std::get<2>(*c2))
+        if (std::get<0>(c1) + a == std::get<0>(c2) && 
+            std::get<1>(c1) + b == std::get<1>(c2) && 
+            std::get<2>(c1) + c == std::get<2>(c2))
         {
           boost::add_edge(i, j, *graph);
           continue;
@@ -133,7 +135,7 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge8()
  
 }
 
-void generateVect8(std::vector<std::tuple<int, int, int>> &vect)
+void generateVect26(std::vector<std::tuple<int, int, int>> &vect)
 {
   vect.emplace_back(-1, -1, -1);
   vect.emplace_back(-1, -1, 0);
@@ -180,9 +182,9 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge26()
        auto c2 = idCoordMap[j];
       for (auto [a, b, c]: vect)
       {
-        if (std::get<0>(*c1) + a == std::get<0>(*c2) && 
-            std::get<1>(*c1) + b == std::get<1>(*c2) && 
-            std::get<2>(*c1) + c == std::get<2>(*c2))
+        if (std::get<0>(c1) + a == std::get<0>(c2) && 
+            std::get<1>(c1) + b == std::get<1>(c2) && 
+            std::get<2>(c1) + c == std::get<2>(c2))
         {
           boost::add_edge(i, j, *graph);
           continue;
@@ -191,3 +193,4 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge26()
     }
   }
 }
+
