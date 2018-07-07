@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "adapter.hh"
+#include "adapterImgtoGr.hh"
 
 struct VertexProperties
 {
@@ -52,6 +53,8 @@ int main()
 
     for (auto [k, v]: map)
       std::cout << " -> " << k << "   " << v << std::endl;
+
+    AdapterImgToGr<int, int, Adapter<int, int, DirectedGraph>> a2(2, a);
 
     return 0;
  }
