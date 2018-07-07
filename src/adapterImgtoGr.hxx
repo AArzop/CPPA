@@ -1,4 +1,6 @@
 #include <iostream>
+#include <tuple>
+#include <vector>
 
 #include "adapterImgtoGr.hh"
 
@@ -87,10 +89,42 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge4()
   }
 }
 
+void generateVect8(std::vector<std::tuple<int, int, int>> &vect)
+{
+  vect.emplace_back(1, 0, 0);
+  vect.emplace_back(-1, 0, 0);
+  vect.emplace_back(0, 1, 0);
+  vect.emplace_back(0, -1, 0);
+  vect.emplace_back(0, 0, 1);
+  vect.emplace_back(0, 0, -1);
+}
+
+// In this case, coordType should be a tuple of 3 int
 template<typename coordType, typename valueType, class Image>
 void AdapterImgToGr<coordType, valueType, Image>::createEdge6()
 {
+  std::vector<std::tuple<int, int, int>> vect;
+  generateVect8(vect);
 
+  unsigned size = boost::num_vertices(*graph);
+  for (unsigned i = 0; i < size; ++i)
+  {
+    auto c1 = idCoordMap[i];
+    for (unsigned j = i + 1; j < size; ++j)
+    {
+       auto c2 = idCoordMap[j];
+      for (auto [a, b, c]: vect)
+      {
+        if (std::get<0>(*c1) + a == std::get<0>(*c2) && 
+            std::get<1>(*c1) + b == std::get<1>(*c2) && 
+            std::get<2>(*c1) + c == std::get<2>(*c2))
+        {
+          boost::add_edge(i, j, *graph);
+          continue;
+        }
+      }
+    }
+  }
 }
 
 template<typename coordType, typename valueType, class Image>
@@ -99,8 +133,61 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge8()
  
 }
 
+void generateVect8(std::vector<std::tuple<int, int, int>> &vect)
+{
+  vect.emplace_back(-1, -1, -1);
+  vect.emplace_back(-1, -1, 0);
+  vect.emplace_back(-1, -1, 1);
+  vect.emplace_back(-1, 0, -1);
+  vect.emplace_back(-1, 0, 0);
+  vect.emplace_back(-1, 0, 1);
+  vect.emplace_back(-1, 1, -1);
+  vect.emplace_back(-1, 1, 0);
+  vect.emplace_back(-1, 1, 1);
+
+  vect.emplace_back(0, -1, -1);
+  vect.emplace_back(0, -1, 0);
+  vect.emplace_back(0, -1, 1);
+  vect.emplace_back(0, 0, -1);
+  vect.emplace_back(0, 0, 1);
+  vect.emplace_back(0, 1, -1);
+  vect.emplace_back(0, 1, 0);
+  vect.emplace_back(0, 1, 1);
+
+  vect.emplace_back(1, -1, -1);
+  vect.emplace_back(1, -1, 0);
+  vect.emplace_back(1, -1, 1);
+  vect.emplace_back(1, 0, -1);
+  vect.emplace_back(1, 0, 0);
+  vect.emplace_back(1, 0, 1);
+  vect.emplace_back(1, 1, -1);
+  vect.emplace_back(1, 1, 0);
+  vect.emplace_back(1, 1, 1);
+}
+
 template<typename coordType, typename valueType, class Image>
 void AdapterImgToGr<coordType, valueType, Image>::createEdge26()
 {
+  std::vector<std::tuple<int, int, int>> vect;
+  generateVect26(vect);
 
+  unsigned size = boost::num_vertices(*graph);
+  for (unsigned i = 0; i < size; ++i)
+  {
+    auto c1 = idCoordMap[i];
+    for (unsigned j = i + 1; j < size; ++j)
+    {
+       auto c2 = idCoordMap[j];
+      for (auto [a, b, c]: vect)
+      {
+        if (std::get<0>(*c1) + a == std::get<0>(*c2) && 
+            std::get<1>(*c1) + b == std::get<1>(*c2) && 
+            std::get<2>(*c1) + c == std::get<2>(*c2))
+        {
+          boost::add_edge(i, j, *graph);
+          continue;
+        }
+      }
+    }
+  }
 }
