@@ -56,7 +56,6 @@ template<typename coordType, typename valueType, class Image>
 void AdapterImgToGr<coordType, valueType, Image>::createEdge2()
 {
   unsigned size = boost::num_vertices(*graph);
-
   for (unsigned i = 0; i < size; ++i)
   {
     for (unsigned j = i + 1; j < size; ++j)
@@ -71,7 +70,21 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge2()
 template<typename coordType, typename valueType, class Image>
 void AdapterImgToGr<coordType, valueType, Image>::createEdge4()
 {
-
+  unsigned size = boost::num_vertices(*graph);
+  for (unsigned i = 0; i < size; ++i)
+  {
+    for (unsigned j = i + 1; j < size; ++j)
+    {
+      auto coord_i = idCoordMap[i];
+      auto coord_j = idCoordMap[j];
+      if (coord_i.first == coord_j.first)
+        if (coord_i.second + 1 == coord_j.second || coord_i.second == coord_j.second + 1)
+          boost::add_edge(i, j, *graph);
+      else if (coord_i.second == coord_j.second)
+        if (coord_i.first + 1 == coord_j.first || coord_i.first == coord_j.first + 1)
+          boost::add_edge(i, j, *graph);
+    }
+  }
 }
 
 template<typename coordType, typename valueType, class Image>
@@ -83,7 +96,7 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge6()
 template<typename coordType, typename valueType, class Image>
 void AdapterImgToGr<coordType, valueType, Image>::createEdge8()
 {
-
+ 
 }
 
 template<typename coordType, typename valueType, class Image>
