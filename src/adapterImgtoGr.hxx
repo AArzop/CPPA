@@ -143,8 +143,10 @@ void AdapterImgToGr<std::pair<int, int>, valueType, Image>::createEdge4()
           boost::add_edge(i, j, *graph);
       }
       else if (coord_i.second == coord_j.second)
+      {
         if (coord_i.first + 1 == coord_j.first || coord_i.first == coord_j.first + 1)
           boost::add_edge(i, j, *graph);
+      }
     }
   }
 }
