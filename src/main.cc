@@ -56,5 +56,7 @@ int main()
 
     AdapterImgToGr<int, int, AdapterGrToImg<int, int, DirectedGraph>> a2(2, a);
 
+    std::cout << "----- " << boost::num_edges(a2()) << std::endl;
+
     return 0;
  }

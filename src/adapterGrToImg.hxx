@@ -8,9 +8,6 @@ AdapterGrToImg<coordType, valueType, Graph>::AdapterGrToImg(Graph g)
 {
   for (unsigned i = 0; i < boost::num_vertices(g); i++)
     pixelMap[g[i].coord] = g[i].value;
-
-  for (auto it = pixelMap.begin(); it != pixelMap.end(); ++it)
-    std::cout << "***** " << it->first << "   " << it->second << std::endl;
 }
 
 
