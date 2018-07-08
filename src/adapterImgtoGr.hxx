@@ -127,6 +127,28 @@ void AdapterImgToGr<int, valueType, Image>::createEdge2()
   }
 }
 
+
+void check_conex_8(std::pair<int, int> coord_i, std::pair<int, int> coord_j, int i, int j, Graph& graph)
+{                                                                               
+  if (coord_i.first + 1 == coord_j.first || coord_i.first == coord_j.first + 1) 
+    if (coord_i.second + 1 == coord_j.second || coord_i.second == coord_j.second + 1)
+      boost::add_edge(i, j, graph);                                             
+} 
+
+void check_conex_4(std::pair<int, int> coord_i, std::pair<int, int> coord_j, int i, int j, Graph& graph)
+{                                                                               
+  if (coord_i.first == coord_j.first)                                            
+  {                                                                              
+    if (coord_i.second + 1 == coord_j.second || coord_i.second - 1 == coord_j.second)
+      boost::add_edge(i, j, graph);                                             
+  }                                                                             
+  else if (coord_i.second == coord_j.second)                                    
+  {                                                                             
+    if (coord_i.first + 1 == coord_j.first || coord_i.first == coord_j.first + 1)
+     boost::add_edge(i, j, graph);                                              
+  }                                                                             
+}
+
 template<typename valueType, class Image>
 void AdapterImgToGr<std::pair<int, int>, valueType, Image>::createEdge4()
 {
@@ -137,16 +159,7 @@ void AdapterImgToGr<std::pair<int, int>, valueType, Image>::createEdge4()
     {
       auto& coord_i = propertyMap[i].coord;
       auto& coord_j = propertyMap[j].coord;
-      if (coord_i.first == coord_j.first)
-      {
-        if (coord_i.second + 1 == coord_j.second || coord_i.second == coord_j.second + 1)
-          boost::add_edge(i, j, *graph);
-      }
-      else if (coord_i.second == coord_j.second)
-      {
-        if (coord_i.first + 1 == coord_j.first || coord_i.first == coord_j.first + 1)
-          boost::add_edge(i, j, *graph);
-      }
+      check_conex_4(coord_i, coord_j, i, j, *graph);
     }
   }
 }
@@ -191,7 +204,17 @@ void AdapterImgToGr<std::tuple<int, int, int>, valueType, Image>::createEdge6()
 template<typename valueType, class Image>
 void AdapterImgToGr<std::pair<int, int>, valueType, Image>::createEdge8()
 {
- 
+  unsigned size = boost::num_vertices(*graph);                                     
+  for (unsigned i = 0; i < size; ++i)                                              
+  {                                                                                
+    for (unsigned j = i + 1; j < size; ++j)                                        
+    {                                                                              
+      auto& coord_i = propertyMap[i].coord;                                        
+      auto& coord_j = propertyMap[j].coord;                                        
+      check_conex_4(coord_i, coord_j, i, j, *graph); 
+      check_conex_8(coord_i, coord_j, i, j, *graph); 
+    }                                                                              
+  }      
 }
 
 void generateVect26(std::vector<std::tuple<int, int, int>> &vect)

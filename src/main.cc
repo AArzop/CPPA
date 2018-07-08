@@ -28,10 +28,15 @@ int main()
     boost::add_edge (4, 5, 6, g);
     boost::add_edge (2, 5, 7, g);
 
-    for (unsigned i = 0; i < boost::num_vertices(g); i++)
+    int x = 0;
+    for (unsigned i = 0; i < 3; ++i)
     {
-      g[i].coord = std::make_pair(i, 0);
-      g[i].value = i * i;
+      for (unsigned j = 0; j < 3; ++j)
+      {  
+        g[x].coord = std::make_pair(i, j);
+        g[x].value = i * i;
+        ++x;
+      }
     } 
 
     AdapterGrToImg<std::pair<int, int>, int, DirectedGraph> a(g);
