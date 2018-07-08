@@ -9,6 +9,7 @@ AdapterImgToGr<coordType, valueType, Image>::AdapterImgToGr(unsigned connexite, 
   connexite_(connexite)
 {
   graph = std::make_unique<Graph>();
+  img = img;
   std::cerr << "Invalid type\n";
 }
 
