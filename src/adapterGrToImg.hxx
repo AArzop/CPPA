@@ -1,10 +1,10 @@
-#include "adapter.hh"
+#include "adapterGrToImg.hh"
 
 #include <iostream>
 #include <vector>
 
 template<typename coordType, typename valueType, typename Graph>
-Adapter<coordType, valueType, Graph>::Adapter(Graph g)
+AdapterGrToImg<coordType, valueType, Graph>::AdapterGrToImg(Graph g)
 {
   for (unsigned i = 0; i < boost::num_vertices(g); i++)
     pixelMap[g[i].coord] = g[i].value;
@@ -15,19 +15,19 @@ Adapter<coordType, valueType, Graph>::Adapter(Graph g)
 
 
 template<typename coordType, typename valueType, typename Graph>
-const valueType& Adapter<coordType, valueType, Graph>::operator() (point_type p) const
+const valueType& AdapterGrToImg<coordType, valueType, Graph>::operator() (point_type p) const
 {
   return pixelMap[p];
 }
 
 template<typename coordType, typename valueType, typename Graph>
-valueType& Adapter<coordType, valueType, Graph>::operator() (point_type p)
+valueType& AdapterGrToImg<coordType, valueType, Graph>::operator() (point_type p)
 {
   return pixelMap[p];
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto Adapter<coordType, valueType, Graph>::domain() const
+auto AdapterGrToImg<coordType, valueType, Graph>::domain() const
 {
   std::vector<coordType> ret;
 
@@ -38,7 +38,7 @@ auto Adapter<coordType, valueType, Graph>::domain() const
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto Adapter<coordType, valueType, Graph>::values() const
+auto AdapterGrToImg<coordType, valueType, Graph>::values() const
 {
   std::vector<valueType> ret;
 
@@ -49,7 +49,7 @@ auto Adapter<coordType, valueType, Graph>::values() const
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto Adapter<coordType, valueType, Graph>::values()
+auto AdapterGrToImg<coordType, valueType, Graph>::values()
 {
   std::vector<valueType> ret;
 
@@ -60,13 +60,13 @@ auto Adapter<coordType, valueType, Graph>::values()
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto Adapter<coordType, valueType, Graph>::pixels() const
+auto AdapterGrToImg<coordType, valueType, Graph>::pixels() const
 {
   return pixelMap;
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto Adapter<coordType, valueType, Graph>::pixels()
+auto AdapterGrToImg<coordType, valueType, Graph>::pixels()
 {
   return pixelMap;
 }

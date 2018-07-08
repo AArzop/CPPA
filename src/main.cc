@@ -1,7 +1,7 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <iostream>
 
-#include "adapter.hh"
+#include "adapterGrToImg.hh"
 #include "adapterImgtoGr.hh"
 
 struct VertexProperties
@@ -45,7 +45,7 @@ int main()
  
     std::cout << std::endl;
     
-    Adapter<int, int, DirectedGraph> a(g);
+    AdapterGrToImg<int, int, DirectedGraph> a(g);
 
     std::cout << std::endl;
 
@@ -54,7 +54,7 @@ int main()
     for (auto [k, v]: map)
       std::cout << " -> " << k << "   " << v << std::endl;
 
-    AdapterImgToGr<int, int, Adapter<int, int, DirectedGraph>> a2(2, a);
+    AdapterImgToGr<int, int, AdapterGrToImg<int, int, DirectedGraph>> a2(2, a);
 
     return 0;
  }

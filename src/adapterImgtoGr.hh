@@ -10,6 +10,10 @@ class AdapterImgToGr
   public:
     AdapterImgToGr(unsigned connexite, Image img);
 
+    auto getGraph() const;
+    const Graph& operator() () const { return *graph; };
+    Graph operator() () { return *graph; };
+
   private:
     unsigned connexite_;
     std::unique_ptr<Graph> graph;
@@ -18,7 +22,6 @@ class AdapterImgToGr
     std::map<unsigned, int> idCoordMapInt;
     std::map<unsigned, std::pair<int, int>> idCoordMapPair;
     std::map<unsigned, std::tuple<int, int, int>> idCoordMapTuple;
-
 
     void createGraph(Image img);
     void createEdge2();

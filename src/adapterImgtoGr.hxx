@@ -8,15 +8,13 @@ template<typename coordType, typename valueType, class Image>
 AdapterImgToGr<coordType, valueType, Image>::AdapterImgToGr(unsigned connexite, Image img):
   connexite_(connexite)
 {
+  graph = std::make_unique<Graph>();
   if (connexite != 2 && connexite != 4 && connexite != 8 && connexite != 6 
       && connexite != 26)
   {
     std::cerr << "Invalid connexite\n";
-    graph = nullptr;
     return;
   }
-
-  graph = std::make_unique<Graph>();
   createGraph(img);
 }
 
@@ -85,8 +83,8 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge4()
   {
     for (unsigned j = i + 1; j < size; ++j)
     {
-      auto coord_i = idCoordMapPair[i];
-      auto coord_j = idCoordMapPair[j];
+      auto& coord_i = idCoordMapPair[i];
+      auto& coord_j = idCoordMapPair[j];
       if (coord_i.first == coord_j.first)
       {
         if (coord_i.second + 1 == coord_j.second || coord_i.second == coord_j.second + 1)
@@ -99,7 +97,7 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge4()
   }
 }
 
-void generateVect8(std::vector<std::tuple<int, int, int>> &vect)
+void generateVect6(std::vector<std::tuple<int, int, int>> &vect)
 {
   vect.emplace_back(1, 0, 0);
   vect.emplace_back(-1, 0, 0);
@@ -109,20 +107,19 @@ void generateVect8(std::vector<std::tuple<int, int, int>> &vect)
   vect.emplace_back(0, 0, -1);
 }
 
-// In this case, coordType should be a tuple of 3 int
 template<typename coordType, typename valueType, class Image>
 void AdapterImgToGr<coordType, valueType, Image>::createEdge6()
 {
   std::vector<std::tuple<int, int, int>> vect;
-  generateVect8(vect);
+  generateVect6(vect);
 
   unsigned size = boost::num_vertices(*graph);
   for (unsigned i = 0; i < size; ++i)
   {
-    auto c1 = idCoordMapTuple[i];
+    auto& c1 = idCoordMapTuple[i];
     for (unsigned j = i + 1; j < size; ++j)
     {
-      auto c2 = idCoordMapTuple[j];
+      auto& c2 = idCoordMapTuple[j];
       for (auto [a, b, c]: vect)
       {
         if (std::get<0>(c1) + a == std::get<0>(c2) && 
@@ -184,10 +181,10 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge26()
   unsigned size = boost::num_vertices(*graph);
   for (unsigned i = 0; i < size; ++i)
   {
-    auto c1 = idCoordMapTuple[i];
+    auto& c1 = idCoordMapTuple[i];
     for (unsigned j = i + 1; j < size; ++j)
     {
-       auto c2 = idCoordMapTuple[j];
+      auto& c2 = idCoordMapTuple[j];
       for (auto [a, b, c]: vect)
       {
         if (std::get<0>(c1) + a == std::get<0>(c2) && 
@@ -200,5 +197,11 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge26()
       }
     }
   }
+}
+
+template<typename coordType, typename valueType, class Image>
+auto AdapterImgToGr<coordType, valueType, Image>::getGraph() const
+{
+  return *graph;
 }
 

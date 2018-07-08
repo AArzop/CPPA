@@ -4,7 +4,7 @@
 #include <map>
 
 template<typename coordType, typename valueType, typename Graph>
-class Adapter
+class AdapterGrToImg
 {
 public:
   using point_type = coordType;
@@ -13,7 +13,7 @@ public:
   using reference = valueType&;
   using const_reference = const valueType&;
   
-  Adapter(Graph g);
+  AdapterGrToImg(Graph g);
   
   const_reference operator() (point_type p) const;
   reference operator() (point_type p);
@@ -30,4 +30,4 @@ private:
   std::map<coordType, valueType> pixelMap;
 };
 
-#include "adapter.hxx"
+#include "adapterGrToImg.hxx"
