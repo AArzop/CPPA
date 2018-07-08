@@ -27,7 +27,15 @@ void AdapterImgToGr<coordType, valueType, Image>::createGraph(Image img)
   {
     property_map[k] = v;
     unsigned id = boost::add_vertex(*graph);
-    idCoordMap[id] = k;
+    if (std::is_same<coordType, int>::value)
+      idCoordMapInt[id] = k;
+    else if (std::is_same<coordType, std::pair<int, int>>::value)
+      idCoordMapInt[id] = k;
+    else if (std::is_same<coordType, std::tuple<int, int, int>>::value)
+      idCoordMapInt[id] = k;
+    else
+      return;
+    
   }
   
   switch (connexite_)
@@ -62,7 +70,7 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge2()
   {
     for (unsigned j = i + 1; j < size; ++j)
     {
-      int diff = idCoordMap[i] - idCoordMap[j];
+      int diff = idCoordMapInt[i] - idCoordMapInt[j];
       if (diff == 1 || diff == -1)
         boost::add_edge(i, j, *graph);
     }
@@ -77,8 +85,8 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge4()
   {
     for (unsigned j = i + 1; j < size; ++j)
     {
-      auto coord_i = idCoordMap[i];
-      auto coord_j = idCoordMap[j];
+      auto coord_i = idCoordMapPair[i];
+      auto coord_j = idCoordMapPair[j];
       if (coord_i.first == coord_j.first)
       {
         if (coord_i.second + 1 == coord_j.second || coord_i.second == coord_j.second + 1)
@@ -111,10 +119,10 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge6()
   unsigned size = boost::num_vertices(*graph);
   for (unsigned i = 0; i < size; ++i)
   {
-    auto c1 = idCoordMap[i];
+    auto c1 = idCoordMapTuple[i];
     for (unsigned j = i + 1; j < size; ++j)
     {
-       auto c2 = idCoordMap[j];
+      auto c2 = idCoordMapTuple[j];
       for (auto [a, b, c]: vect)
       {
         if (std::get<0>(c1) + a == std::get<0>(c2) && 
@@ -176,10 +184,10 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge26()
   unsigned size = boost::num_vertices(*graph);
   for (unsigned i = 0; i < size; ++i)
   {
-    auto c1 = idCoordMap[i];
+    auto c1 = idCoordMapTuple[i];
     for (unsigned j = i + 1; j < size; ++j)
     {
-       auto c2 = idCoordMap[j];
+       auto c2 = idCoordMapTuple[j];
       for (auto [a, b, c]: vect)
       {
         if (std::get<0>(c1) + a == std::get<0>(c2) && 

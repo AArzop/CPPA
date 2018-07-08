@@ -13,8 +13,12 @@ class AdapterImgToGr
   private:
     unsigned connexite_;
     std::unique_ptr<Graph> graph;
+
     std::map<coordType, valueType> property_map;
-    std::map<unsigned, coordType> idCoordMap;
+    std::map<unsigned, int> idCoordMapInt;
+    std::map<unsigned, std::pair<int, int>> idCoordMapPair;
+    std::map<unsigned, std::tuple<int, int, int>> idCoordMapTuple;
+
 
     void createGraph(Image img);
     void createEdge2();
