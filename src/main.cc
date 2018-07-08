@@ -6,7 +6,7 @@
 
 struct VertexProperties
 {
-  int coord;
+  std::pair<int, int> coord;
   int value;
 };
 
@@ -30,31 +30,17 @@ int main()
 
     for (unsigned i = 0; i < boost::num_vertices(g); i++)
     {
-      g[i].coord = i; 
+      g[i].coord = std::make_pair(i, 0);
       g[i].value = i * i;
     } 
 
-    std::pair<edge_iterator, edge_iterator> ei = edges(g);
- 
-    std::cout << "Number of edges = " << num_edges(g) << "\n";
-    std::cout << "Edge list:\n";
- 
-    std::copy( ei.first, ei.second,
-                std::ostream_iterator<boost::adjacency_list<>::edge_descriptor>{
-                    std::cout, "\n"});
- 
-    std::cout << std::endl;
-    
-    AdapterGrToImg<int, int, DirectedGraph> a(g);
+    AdapterGrToImg<std::pair<int, int>, int, DirectedGraph> a(g);
 
     std::cout << std::endl;
 
     auto map = a.pixels();
 
-    for (auto [k, v]: map)
-      std::cout << " -> " << k << "   " << v << std::endl;
-
-    AdapterImgToGr<int, int, AdapterGrToImg<int, int, DirectedGraph>> a2(2, a);
+    AdapterImgToGr<std::pair<int, int>, int, AdapterGrToImg<std::pair<int, int>, int, DirectedGraph>> a2(4, a);
 
     std::cout << "----- " << boost::num_edges(a2()) << std::endl;
 

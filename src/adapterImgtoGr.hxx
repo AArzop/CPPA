@@ -9,8 +9,15 @@ AdapterImgToGr<coordType, valueType, Image>::AdapterImgToGr(unsigned connexite, 
   connexite_(connexite)
 {
   graph = std::make_unique<Graph>();
-  if (connexite != 2 && connexite != 4 && connexite != 8 && connexite != 6 
-      && connexite != 26)
+  std::cerr << "Invalid type\n";
+}
+
+template<typename valueType, class Image>
+AdapterImgToGr<int, valueType, Image>::AdapterImgToGr(unsigned connexite, Image img):
+  connexite_(connexite)
+{
+  graph = std::make_unique<Graph>();
+  if (connexite != 2)
   {
     std::cerr << "Invalid connexite\n";
     return;
@@ -18,73 +25,118 @@ AdapterImgToGr<coordType, valueType, Image>::AdapterImgToGr(unsigned connexite, 
   createGraph(img);
 }
 
-template<typename coordType, typename valueType, class Image>
-void AdapterImgToGr<coordType, valueType, Image>::createGraph(Image img)
+template<typename valueType, class Image>
+AdapterImgToGr<std::pair<int, int>, valueType, Image>::AdapterImgToGr(unsigned connexite, Image img):
+  connexite_(connexite)
+{
+  graph = std::make_unique<Graph>();
+  if (connexite != 4 && connexite != 8)
+  {
+    std::cerr << "Invalid connexite\n";
+    return;
+  }
+  createGraph(img);
+}
+
+template<typename valueType, class Image>
+AdapterImgToGr<std::tuple<int, int, int>, valueType, Image>::AdapterImgToGr(unsigned connexite, Image img):
+  connexite_(connexite)
+{
+  graph = std::make_unique<Graph>();
+  if (connexite != 6 && connexite != 26)
+  {
+    std::cerr << "Invalid connexite\n";
+    return;
+  }
+  createGraph(img);
+}
+
+
+
+
+
+
+template<typename valueType, class Image>
+void AdapterImgToGr<int, valueType, Image>::createGraph(Image img)
 {
   for (auto& [k, v]: img.pixels())
   {
-    property_map[k] = v;
+    struct Vertex vertex;
+    vertex.coord = k;
+    vertex.value = v;
+
     unsigned id = boost::add_vertex(*graph);
-    if (std::is_same<coordType, int>::value)
-      idCoordMapInt[id] = k;
-    else if (std::is_same<coordType, std::pair<int, int>>::value)
-      idCoordMapInt[id] = k;
-    else if (std::is_same<coordType, std::tuple<int, int, int>>::value)
-      idCoordMapInt[id] = k;
-    else
-      return;
-    
+    propertyMap[id] = vertex;
   }
-  
-  switch (connexite_)
-  {
-    case 2:
-      createEdge2();
-      break;
-
-    case 4:
-      createEdge4();
-      break;
-
-    case 6:
-      createEdge6();
-      break;
-
-    case 8:
-      createEdge8();
-      break;
-
-    case 26:
-      createEdge26();
-      break;
-  }
+  createEdge2();  
 }
 
-template<typename coordType, typename valueType, class Image>
-void AdapterImgToGr<coordType, valueType, Image>::createEdge2()
+template<typename valueType, class Image>
+void AdapterImgToGr<std::pair<int, int>, valueType, Image>::createGraph(Image img)
+{
+  for (auto& [k, v]: img.pixels())
+  {
+    struct Vertex vertex;
+    vertex.coord = k;
+    vertex.value = v;
+
+    unsigned id = boost::add_vertex(*graph);
+    propertyMap[id] = vertex;
+  }
+  if (connexite_ == 4)
+    createEdge4();
+  else
+    createEdge8();  
+}
+
+template<typename valueType, class Image>
+void AdapterImgToGr<std::tuple<int, int, int>, valueType, Image>::createGraph(Image img)
+{
+  for (auto& [k, v]: img.pixels())
+  {
+    struct Vertex vertex;
+    vertex.coord = k;
+    vertex.value = v;
+
+    unsigned id = boost::add_vertex(*graph);
+    propertyMap[id] = vertex;
+  }
+  if (connexite_ == 6)
+    createEdge6();
+  else
+    createEdge26();  
+}
+
+
+
+
+
+
+template<typename valueType, class Image>
+void AdapterImgToGr<int, valueType, Image>::createEdge2()
 {
   unsigned size = boost::num_vertices(*graph);
   for (unsigned i = 0; i < size; ++i)
   {
     for (unsigned j = i + 1; j < size; ++j)
     {
-      int diff = idCoordMapInt[i] - idCoordMapInt[j];
+      int diff = propertyMap[i].coord - propertyMap[j].coord;
       if (diff == 1 || diff == -1)
         boost::add_edge(i, j, *graph);
     }
   }
 }
 
-template<typename coordType, typename valueType, class Image>
-void AdapterImgToGr<coordType, valueType, Image>::createEdge4()
+template<typename valueType, class Image>
+void AdapterImgToGr<std::pair<int, int>, valueType, Image>::createEdge4()
 {
   unsigned size = boost::num_vertices(*graph);
   for (unsigned i = 0; i < size; ++i)
   {
     for (unsigned j = i + 1; j < size; ++j)
     {
-      auto& coord_i = idCoordMapPair[i];
-      auto& coord_j = idCoordMapPair[j];
+      auto& coord_i = propertyMap[i].coord;
+      auto& coord_j = propertyMap[j].coord;
       if (coord_i.first == coord_j.first)
       {
         if (coord_i.second + 1 == coord_j.second || coord_i.second == coord_j.second + 1)
@@ -107,8 +159,8 @@ void generateVect6(std::vector<std::tuple<int, int, int>> &vect)
   vect.emplace_back(0, 0, -1);
 }
 
-template<typename coordType, typename valueType, class Image>
-void AdapterImgToGr<coordType, valueType, Image>::createEdge6()
+template<typename valueType, class Image>
+void AdapterImgToGr<std::tuple<int, int, int>, valueType, Image>::createEdge6()
 {
   std::vector<std::tuple<int, int, int>> vect;
   generateVect6(vect);
@@ -116,10 +168,10 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge6()
   unsigned size = boost::num_vertices(*graph);
   for (unsigned i = 0; i < size; ++i)
   {
-    auto& c1 = idCoordMapTuple[i];
+    auto& c1 = propertyMap[i].coord;
     for (unsigned j = i + 1; j < size; ++j)
     {
-      auto& c2 = idCoordMapTuple[j];
+      auto& c2 = propertyMap[j].coord;
       for (auto [a, b, c]: vect)
       {
         if (std::get<0>(c1) + a == std::get<0>(c2) && 
@@ -134,8 +186,8 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge6()
   }
 }
 
-template<typename coordType, typename valueType, class Image>
-void AdapterImgToGr<coordType, valueType, Image>::createEdge8()
+template<typename valueType, class Image>
+void AdapterImgToGr<std::pair<int, int>, valueType, Image>::createEdge8()
 {
  
 }
@@ -172,8 +224,8 @@ void generateVect26(std::vector<std::tuple<int, int, int>> &vect)
   vect.emplace_back(1, 1, 1);
 }
 
-template<typename coordType, typename valueType, class Image>
-void AdapterImgToGr<coordType, valueType, Image>::createEdge26()
+template<typename valueType, class Image>
+void AdapterImgToGr<std::tuple<int, int, int>, valueType, Image>::createEdge26()
 {
   std::vector<std::tuple<int, int, int>> vect;
   generateVect26(vect);
@@ -181,10 +233,10 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge26()
   unsigned size = boost::num_vertices(*graph);
   for (unsigned i = 0; i < size; ++i)
   {
-    auto& c1 = idCoordMapTuple[i];
+    auto& c1 = propertyMap[i].coord;
     for (unsigned j = i + 1; j < size; ++j)
     {
-      auto& c2 = idCoordMapTuple[j];
+      auto& c2 = propertyMap[j].coord;
       for (auto [a, b, c]: vect)
       {
         if (std::get<0>(c1) + a == std::get<0>(c2) && 
@@ -197,11 +249,5 @@ void AdapterImgToGr<coordType, valueType, Image>::createEdge26()
       }
     }
   }
-}
-
-template<typename coordType, typename valueType, class Image>
-auto AdapterImgToGr<coordType, valueType, Image>::getGraph() const
-{
-  return *graph;
 }
 
