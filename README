@@ -1,0 +1,52 @@
+﻿This directory contains our project for the course CPPA at EPITA.
+We had to implement two adapters:
+* the first one has to “convert” a graph to an image (STEP 1)
+* the second one has to do the inverse (STEP 2)
+
+
+To Compile:
+* the 1st step: edit the Makefile by putting the correct file:
+            SRC = ./src/step1_example.cc
+* 2ns step: same thing but with:
+            SRC = ./src/step2_example.cc
+Those 2 files are self explanatory and serves as examples for the use of the adapter.
+
+
+
+
+STEP 1:
+The class AdapterGrToImg is a templated class which needs three parameters:
+* coordType which is the type of coordinate on the image
+* valueType which represents the type of the value of each point on the image
+* graph which represents the type of the graph passed as argument
+
+
+The constructor of this class needs a graph which has to implement two vertex properties:
+* coordType coord
+* valueType value
+
+
+It can use severals methods:
+* domain() which returns a range of points of the image
+* values() which returns a range of constant / mutable value of the point of the image 
+* pixels() which returns a combination of domain and values
+* operator() (coordType coord) which returns the value of the point p
+        
+
+
+STEP 2:
+The class AdapterGrToImg is a templated class which needs three parameters:
+* coordType which is the type of coordinate on the image. Only few type are allowed: int, std::pair<int, int> and std::tuple<int, int, int> with the correct connexity
+* valueType which represents the type of the value of each point on the image
+* image which represents the type of the image passed as argument
+
+
+The constructor needs a image and the connexity as argument:
+* connexity = 2 if coordType is an int
+* connexity = 4 or 8 if coordType is a pair
+* connexity = 6 or 26 if coordType is a tuple
+
+
+You can use the adapter as a graph with the operator().
+The graph type will be:
+boost::adjency_list<boost::listS, boost::vecS, boost::bidirectionnalS>
