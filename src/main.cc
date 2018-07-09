@@ -6,54 +6,79 @@
 
 struct VertexProperties
 {
-  std::tuple<int, int, int> coord;
-  int value;
+  std::pair<int, int> coord; // 2D coordinates
+  unsigned char value; // white and black image
 };
 
-typedef boost::property<boost::edge_weight_t, int> EdgeWeightProperty;
-typedef boost::adjacency_list<boost::listS, boost::vecS, boost::directedS, VertexProperties, EdgeWeightProperty > DirectedGraph;
-typedef boost::graph_traits<DirectedGraph>::edge_iterator edge_iterator;
- 
+typedef boost::adjacency_list<boost::listS, boost::vecS, boost::directedS, VertexProperties> DirectedGraph;
+
+template <class Image, class Predicate, typename T>
+void fill_if(Image& img, Predicate pred, T v)
+{
+  static_assert(std::is_convertible<T, typename Image::value_type>::value, "");
+
+  for (auto& [p,value] : img.pixels())
+    if (pred(p))
+    {
+      std::cout << "--- " << (int)value << std::endl;
+      value = v;
+    }
+}
+
 int main()
 {
+    // Graph creation
     DirectedGraph g;
- 
-    boost::add_edge (0, 1, 8, g);
-    boost::add_edge (0, 3, 18, g);
-    boost::add_edge (1, 2, 20, g);
-    boost::add_edge (2, 3, 2, g);
-    boost::add_edge (3, 1, 1, g);
-    boost::add_edge (1, 3, 7, g);
-    boost::add_edge (1, 4, 1, g);
-    boost::add_edge (4, 5, 6, g);
-    boost::add_edge (2, 7, 7, g);
+    boost::add_edge (0, 1, g);
+    boost::add_edge (0, 3, g);
+    boost::add_edge (1, 2, g);
+    boost::add_edge (2, 3, g);
+    boost::add_edge (3, 1, g);
+    boost::add_edge (1, 3, g);
+    boost::add_edge (1, 4, g);
+    boost::add_edge (4, 5, g);
+    boost::add_edge (2, 8, g);
 
-    int x = 0;
-    for (int i = 0; i < 2; ++i)
-    {
-      for (int j = 0; j < 2; ++j)
-      {
-        for (int k = 0;  k < 2; ++k)
-        {
-          g[x].coord = std::make_tuple(i, j, k);
-          g[x].value = i * i;
-          ++x;
-        }
-      }
-    }
+    // Set vertex's properties
+    g[0].coord = std::make_pair(0, 0);
+    g[0].value = 0;
+    
+    g[1].coord = std::make_pair(1, 0);
+    g[1].value = 0;
+    
+    g[2].coord = std::make_pair(2, 0);
+    g[2].value = 0;
+    
+    g[3].coord = std::make_pair(0, 1);
+    g[3].value = 56;
+    
+    g[4].coord = std::make_pair(1, 1);
+    g[4].value = 215;
+    
+    g[5].coord = std::make_pair(2, 1);
+    g[5].value = 127;
+    
+    g[6].coord = std::make_pair(0, 2);
+    g[6].value = 255;
+    
+    g[7].coord = std::make_pair(1, 2);
+    g[7].value = 255;
 
-    for (unsigned i = 0; i < boost::num_vertices(g); ++i)
-      std::cout << "**** " << i << " -> " << std::get<0>(g[i].coord) << "; " << std::get<1>(g[i].coord) << "; " << std::get<2>(g[i].coord) << std::endl;
+    g[8].coord = std::make_pair(2, 2);
+    g[8].value = 42;
 
-    AdapterGrToImg<std::tuple<int, int, int>, int, DirectedGraph> a(g);
+    
+    AdapterGrToImg<std::pair<int, int>, unsigned char, DirectedGraph> a(g);
 
-    std::cout << std::endl;
+    for (auto [p, v]: a.pixels())
+      std::cout << (int) v << std::endl;
 
-    auto map = a.pixels();
+    fill_if(a, [](std::pair<int, int> p) { return p.first == 0; }, 55);
+    
+    std::cout << "\n\n";
 
-    AdapterImgToGr<std::tuple<int, int, int>, int, AdapterGrToImg<std::tuple<int, int, int>, int, DirectedGraph>> a2(6, a);
-
-    std::cout << "----- " << boost::num_edges(a2()) << std::endl;
+    for (auto [p, v]: a.pixels())
+      std::cout << (int) v << std::endl;
 
     return 0;
  }

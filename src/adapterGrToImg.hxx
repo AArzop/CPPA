@@ -1,13 +1,16 @@
 #include "adapterGrToImg.hh"
 
 #include <iostream>
-#include <vector>
+#include <range/v3/view/zip.hpp>
 
 template<typename coordType, typename valueType, typename Graph>
 AdapterGrToImg<coordType, valueType, Graph>::AdapterGrToImg(Graph g)
 {
   for (unsigned i = 0; i < boost::num_vertices(g); i++)
-    pixelMap[g[i].coord] = g[i].value;
+  {
+    coords.push_back(g[i].coord);
+    value.push_back(g[i].value);
+  }
 }
 
 
@@ -24,46 +27,31 @@ valueType& AdapterGrToImg<coordType, valueType, Graph>::operator() (point_type p
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto AdapterGrToImg<coordType, valueType, Graph>::domain() const
+auto& AdapterGrToImg<coordType, valueType, Graph>::domain() const
 {
-  std::vector<coordType> ret;
-
-  for (auto it = pixelMap.begin(); it != pixelMap.end(); ++it)
-    ret.push_back(it->first);
-
-  return ret;
+  return coords;
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto AdapterGrToImg<coordType, valueType, Graph>::values() const
+auto& AdapterGrToImg<coordType, valueType, Graph>::values() const
 {
-  std::vector<valueType> ret;
-
-  for (auto it = pixelMap.begin(); it != pixelMap.end(); ++it)
-    ret.push_back(it->second);
-
-  return ret;
+  return value;
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto AdapterGrToImg<coordType, valueType, Graph>::values()
+auto& AdapterGrToImg<coordType, valueType, Graph>::values()
 {
-  std::vector<valueType> ret;
-
-  for (auto it = pixelMap.begin(); it != pixelMap.end(); ++it)
-    ret.push_back(it->second);
-
-  return ret;
+  return value;
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto AdapterGrToImg<coordType, valueType, Graph>::pixels() const
+auto& AdapterGrToImg<coordType, valueType, Graph>::pixels() const
 {
-  return pixelMap;
+  return ranges::view::zip(domain(), values());
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto AdapterGrToImg<coordType, valueType, Graph>::pixels()
+auto& AdapterGrToImg<coordType, valueType, Graph>::pixels()
 {
-  return pixelMap;
+  return ranges::view::zip(domain(), values());
 }

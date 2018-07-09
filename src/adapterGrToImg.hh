@@ -2,6 +2,7 @@
 
 #include <boost/property_map/property_map.hpp>
 #include <map>
+#include <vector>
 
 template<typename coordType, typename valueType, typename Graph>
 class AdapterGrToImg
@@ -18,16 +19,18 @@ public:
   const_reference operator() (point_type p) const;
   reference operator() (point_type p);
 
-  auto domain() const;
+  auto& domain() const;
 
-  auto values() const;
-  auto values();
+  auto& values() const;
+  auto& values();
 
-  auto pixels() const;
-  auto pixels();
+  auto& pixels() const;
+  auto& pixels();
 
 private:
   std::map<coordType, valueType> pixelMap;
+  std::vector<coordType> coords;
+  std::vector<valueType> value;
 };
 
 #include "adapterGrToImg.hxx"

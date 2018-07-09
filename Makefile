@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -pedantic -Wall -Wextra -Werror
+CXXFLAGS = -std=c++17 -pedantic -Wall -Wextra -Werror -g
 
 SRC = ./src/main.cc 
 
