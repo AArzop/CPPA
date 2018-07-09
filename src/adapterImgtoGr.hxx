@@ -60,7 +60,7 @@ AdapterImgToGr<std::tuple<int, int, int>, valueType, Image>::AdapterImgToGr(unsi
 template<typename valueType, class Image>
 void AdapterImgToGr<int, valueType, Image>::createGraph(Image img)
 {
-  for (auto& [k, v]: img.pixels())
+  for (auto&& [k, v]: img.pixels())
   {
     struct Vertex vertex;
     vertex.coord = k;
@@ -75,7 +75,7 @@ void AdapterImgToGr<int, valueType, Image>::createGraph(Image img)
 template<typename valueType, class Image>
 void AdapterImgToGr<std::pair<int, int>, valueType, Image>::createGraph(Image img)
 {
-  for (auto& [k, v]: img.pixels())
+  for (auto&& [k, v]: img.pixels())
   {
     struct Vertex vertex;
     vertex.coord = k;
@@ -93,7 +93,7 @@ void AdapterImgToGr<std::pair<int, int>, valueType, Image>::createGraph(Image im
 template<typename valueType, class Image>
 void AdapterImgToGr<std::tuple<int, int, int>, valueType, Image>::createGraph(Image img)
 {
-  for (auto& [k, v]: img.pixels())
+  for (auto&& [k, v]: img.pixels())
   {
     struct Vertex vertex;
     vertex.coord = k;
