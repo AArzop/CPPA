@@ -18,13 +18,23 @@ AdapterGrToImg<coordType, valueType, Graph>::AdapterGrToImg(Graph g)
 template<typename coordType, typename valueType, typename Graph>
 const valueType& AdapterGrToImg<coordType, valueType, Graph>::operator() (point_type p) const
 {
-  return pixelMap[p];
+  for (unsigned i = 0; i < coords.size(); ++i)
+  {
+    if (coords[i] == p)
+      return value[i];
+  }
+  return value[0];
 }
 
 template<typename coordType, typename valueType, typename Graph>
 valueType& AdapterGrToImg<coordType, valueType, Graph>::operator() (point_type p)
 {
-  return pixelMap[p];
+  for (unsigned i = 0; i < coords.size(); ++i)
+  {
+    if (coords[i] == p)
+      return value[i];
+  }
+  return value[0];
 }
 
 template<typename coordType, typename valueType, typename Graph>

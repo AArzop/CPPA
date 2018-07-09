@@ -28,7 +28,6 @@ public:
   auto pixels();
 
 private:
-  std::map<coordType, valueType> pixelMap;
   std::vector<coordType> coords;
   std::vector<valueType> value;
 };

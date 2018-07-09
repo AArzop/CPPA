@@ -36,7 +36,7 @@ int main()
     boost::add_edge (4, 5, g);
     boost::add_edge (2, 8, g);
 
-    // Set vertex's properties
+    // Set vertex's properties for 3x3
     g[0].coord = std::make_pair(0, 0);
     g[0].value = 0;
     
@@ -64,10 +64,20 @@ int main()
     g[8].coord = std::make_pair(2, 2);
     g[8].value = 42;
 
-    
+    //Declare Adapter with Graph g 
     AdapterGrToImg<std::pair<int, int>, unsigned char, DirectedGraph> img(g);
+
+    std::cout << "Values of 'pixels':" << std::endl;
+    for (auto&& [p, v]: img.pixels())
+      std::cout << "Pixel #" << p.first << "," << p.second << ": " << (int)v << std::endl;
+    std::cout << std::endl;
 
     fill_if(img, [](std::pair<int, int> p) { return p.first == 0; }, 55);
     
+    std::cout << "Values of 'pixels':" << std::endl;
+    for (auto&& [p, v]: img.pixels())
+      std::cout << "Pixel #" << p.first << "," << p.second << ": " << (int)v << std::endl;
+    std::cout << std::endl;
+
     return 0;
  }
