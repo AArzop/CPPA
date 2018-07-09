@@ -19,13 +19,13 @@ public:
   const_reference operator() (point_type p) const;
   reference operator() (point_type p);
 
-  auto& domain() const;
+  auto domain() const;
 
-  auto& values() const;
-  auto& values();
+  auto values() const;
+  auto values();
 
-  auto& pixels() const;
-  auto& pixels();
+  auto pixels() const;
+  auto pixels();
 
 private:
   std::map<coordType, valueType> pixelMap;

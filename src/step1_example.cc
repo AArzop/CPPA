@@ -17,12 +17,9 @@ void fill_if(Image& img, Predicate pred, T v)
 {
   static_assert(std::is_convertible<T, typename Image::value_type>::value, "");
 
-  for (auto& [p,value] : img.pixels())
+  for (auto&& [p,value] : img.pixels())
     if (pred(p))
-    {
-      std::cout << "--- " << (int)value << std::endl;
       value = v;
-    }
 }
 
 int main()
@@ -68,17 +65,9 @@ int main()
     g[8].value = 42;
 
     
-    AdapterGrToImg<std::pair<int, int>, unsigned char, DirectedGraph> a(g);
+    AdapterGrToImg<std::pair<int, int>, unsigned char, DirectedGraph> img(g);
 
-    for (auto [p, v]: a.pixels())
-      std::cout << (int) v << std::endl;
-
-    fill_if(a, [](std::pair<int, int> p) { return p.first == 0; }, 55);
+    fill_if(img, [](std::pair<int, int> p) { return p.first == 0; }, 55);
     
-    std::cout << "\n\n";
-
-    for (auto [p, v]: a.pixels())
-      std::cout << (int) v << std::endl;
-
     return 0;
  }

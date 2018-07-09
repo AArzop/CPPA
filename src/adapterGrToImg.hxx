@@ -1,7 +1,8 @@
 #include "adapterGrToImg.hh"
 
-#include <iostream>
 #include <range/v3/view/zip.hpp>
+
+#include <iostream>
 
 template<typename coordType, typename valueType, typename Graph>
 AdapterGrToImg<coordType, valueType, Graph>::AdapterGrToImg(Graph g)
@@ -27,31 +28,31 @@ valueType& AdapterGrToImg<coordType, valueType, Graph>::operator() (point_type p
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto& AdapterGrToImg<coordType, valueType, Graph>::domain() const
+auto AdapterGrToImg<coordType, valueType, Graph>::domain() const
 {
   return coords;
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto& AdapterGrToImg<coordType, valueType, Graph>::values() const
+auto AdapterGrToImg<coordType, valueType, Graph>::values() const
 {
   return value;
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto& AdapterGrToImg<coordType, valueType, Graph>::values()
+auto AdapterGrToImg<coordType, valueType, Graph>::values()
 {
   return value;
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto& AdapterGrToImg<coordType, valueType, Graph>::pixels() const
+auto AdapterGrToImg<coordType, valueType, Graph>::pixels() const
 {
-  return ranges::view::zip(domain(), values());
+  return ranges::view::zip(coords, value);
 }
 
 template<typename coordType, typename valueType, typename Graph>
-auto& AdapterGrToImg<coordType, valueType, Graph>::pixels()
+auto AdapterGrToImg<coordType, valueType, Graph>::pixels()
 {
-  return ranges::view::zip(domain(), values());
+  return ranges::view::zip(coords, value);
 }

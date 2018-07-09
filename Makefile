@@ -1,7 +1,7 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -pedantic -Wall -Wextra -Werror -g
+CXXFLAGS = -std=c++17 -pedantic -Wall -Wextra -Werror -I./lib/ -g
 
-SRC = ./src/main.cc 
+SRC = ./src/step1_example.cc 
 
 .PHONY: all parse compile
 
